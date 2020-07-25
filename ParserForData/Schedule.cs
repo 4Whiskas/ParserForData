@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -9,6 +10,7 @@ namespace ParserForData
 {
     static class Schedule
     {
+        static Regex regex;
         static IWebDriver driver;
         static IWebElement query;
         static string faculti, year;
@@ -134,11 +136,7 @@ namespace ParserForData
                                                         message += Environment.NewLine + "➖ ➖ ➖ ➖ ➖ ➖\n";
                                                         
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    message += "Не удалось спарсить(\n";
-                                                }
+                                                }                                                
                                                 Console.WriteLine(message);
                                                 Thread.Sleep(500);
                                             }
