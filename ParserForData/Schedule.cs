@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,10 +14,24 @@ namespace ParserForData
 {
     static class Schedule
     {
+        static WebClient parser = new WebClient();
         static IWebDriver driver;
         static IWebElement query;
         static string faculti, year;
         static IReadOnlyCollection<IWebElement> querry, querryF, querryY, querryG, querryS;
+        internal static IWebElement TryParse(By by,IWebElement web)
+        {
+            List<IWebElement> elements = web.FindElements(by).ToList();
+            if (elements.Count>0)
+            {
+                return web.FindElement(by);
+            }
+            else
+            {
+                return null;
+            }
+            
+        }
         internal static async  void ParseSchedule()
         {
             driver = new ChromeDriver() { Url = "https://rsue.ru/raspisanie/" };
@@ -39,7 +54,7 @@ namespace ParserForData
                 {
                     faculti = querryF.ToList()[kf].Text;
                     querryF.ToList()[kf].Click();
-                    Thread.Sleep(100);
+                    Thread.Sleep(500);
                     query = driver.FindElement(By.Name("k"));
                     querryY = query.FindElements(By.TagName("option"));
                     var flist = querryY.ToList().Select(fk => fk.Text).ToList();
@@ -51,13 +66,13 @@ namespace ParserForData
                             query = driver.FindElement(By.Name("f"));
                             querry = query.FindElements(By.TagName("option"));
                             querry.ToList().Find(p => p.Text == faculti).Click();
-                            Thread.Sleep(100);
+                            Thread.Sleep(500);
                         }
                         if (querryY.ToList()[kk].Text!="Курс")
                         {
                             year = querryY.ToList()[kk].Text;
                             querryY.ToList()[kk].Click();
-                            Thread.Sleep(100);
+                            Thread.Sleep(500);
                             
                             query = driver.FindElement(By.Name("g"));
                             querryG = query.FindElements(By.TagName("option"));
@@ -69,11 +84,11 @@ namespace ParserForData
                                     query = driver.FindElement(By.Name("f"));
                                     querry = query.FindElements(By.TagName("option"));
                                     querry.ToList().Find(p => p.Text == faculti).Click();
-                                    Thread.Sleep(100);
+                                    Thread.Sleep(500);
                                     query = driver.FindElement(By.Name("k"));
                                     querry = query.FindElements(By.TagName("option"));
                                     querry.ToList().Find(p => p.Text == year).Click();
-                                    Thread.Sleep(100);
+                                    Thread.Sleep(500);
                                     query = driver.FindElement(By.Name("g"));
                                     querryG = query.FindElements(By.TagName("option"));
                                     
@@ -82,7 +97,7 @@ namespace ParserForData
                                 {
 
                                     querryG.ToList()[k].Click();
-                                    Thread.Sleep(100);
+                                    Thread.Sleep(500);
                                     
                                     int count = 0;
                                     bool found = false;
@@ -95,28 +110,39 @@ namespace ParserForData
                                         {
                                             if (count < 3)
                                             {
-                                                //if (days[f.FindElement(By.ClassName("col-lg-12")).Text] == today || found)
-                                                //{
-                                                //    found = true;
-                                                //    message += f.FindElement(By.ClassName("col-lg-12")).Text + Environment.NewLine;
-                                                //    count++;
-                                                //    f.FindElements(By.CssSelector("div[class=\"col-lg-12 day\"]")).ToList().ForEach(h =>
-                                                //    {
-                                                //        message += h.FindElement(By.ClassName("time")).Text + " ";
-                                                //        message += h.FindElement(By.ClassName("lesson")).Text + " ";
-                                                //        message += h.FindElement(By.ClassName("prepod")).Text + " ";
-                                                //        //message += String.IsNullOrEmpty(y.FindElements(By.ClassName("aud"))[0].Text)
-                                                //          //  ? h.FindElements(By.ClassName("aud"))[0].Text + " "
-                                                //            //: "";
-                                                //        message += h.FindElements(By.ClassName("aud"))[1].Text + " ";
-                                                //        message += h.FindElement(By.CssSelector("span[class=\"type n-type\"]")).Text +
-                                                //                   Environment.NewLine;
-                                                //    });
-                                                //    message += Environment.NewLine + "➖ ➖ ➖ ➖ ➖ ➖\n";
-                                                //    Console.WriteLine(message);
-                                                //}
+                                                IWebElement temp = TryParse(By.CssSelector("div[class=\"col-lg-12\"]"), f);
+                                                if (temp!=null)
+                                                {
+                                                    if (days[f.FindElement(By.CssSelector("div[class=\"col-lg-12\"]")).Text] == today || found)
+                                                    {
+                                                        found = true;
+                                                        message += f.FindElement(By.CssSelector("div[class=\"col-lg-12\"]")).Text + Environment.NewLine;
+                                                        count++;
+                                                        f.FindElements(By.CssSelector("div[class=\"col-lg-12 day\"]")).ToList().ForEach(h =>
+                                                        {
+                                                            message += h.FindElement(By.ClassName("time")).Text + " ";
+                                                            message += h.FindElement(By.ClassName("lesson")).Text + " ";
+                                                            message += h.FindElement(By.ClassName("prepod")).Text + " ";
+                                                            //message += String.IsNullOrEmpty(y.FindElements(By.ClassName("aud"))[0].Text)
+                                                            //  ? h.FindElements(By.ClassName("aud"))[0].Text + " "
+                                                            //: "";
+                                                            message += h.FindElements(By.ClassName("aud"))[1].Text + " ";
+                                                            message += h.FindElement(By.CssSelector("span[class=\"type n-type\"]")).Text +
+                                                                       Environment.NewLine;
+                                                        });
+                                                        message += Environment.NewLine + "➖ ➖ ➖ ➖ ➖ ➖\n";
+                                                        
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    message += "Не удалось спарсить(\n";
+                                                }
+                                                Console.WriteLine(message);
+                                                Thread.Sleep(500);
 
 
+                                                //string y = x.DownloadString("http://dizilab.com/diziler.xml");
                                                 ////////////////////////////////////////////////////////////////////////////////
                                                 ///
                                                 /// 
@@ -124,6 +150,7 @@ namespace ParserForData
                                                 ///
                                                 /// 
                                                 ////////////////////////////////////////////////////////////////////////////////
+                                                //string fsch = parser.DownloadString("https://rsue.ru/raspisanie/");
                                             }
 
 
