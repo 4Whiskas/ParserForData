@@ -6,6 +6,7 @@ namespace ParserForData
     {
         static void Main(string[] args)
         {
+            News.SendNews();
             Schedule.ParseSchedule();
             
             //Console.ReadKey();

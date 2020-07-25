@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
@@ -14,7 +9,6 @@ namespace ParserForData
 {
     static class Schedule
     {
-        static WebClient parser = new WebClient();
         static IWebDriver driver;
         static IWebElement query;
         static string faculti, year;
