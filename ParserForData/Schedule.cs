@@ -43,13 +43,17 @@ namespace ParserForData
             days.Add("Пятница", DayOfWeek.Friday);
             days.Add("Суббота", DayOfWeek.Saturday);
             string message = "";
-            int k = 0,kf=0,kk=0;
+            int k = 0,kf=0,kk=0,kg=0;
             query = driver.FindElement(By.Name("f"));
             querryF = query.FindElements(By.TagName("option"));
             List<string> flist = querryF.ToList().Select(nm => nm.Text).ToList();
-            int xuinia = 5;
             flist.ToList().ForEach( x =>
             {
+                if (k>0)
+                {
+                    query = driver.FindElement(By.Name("f"));
+                    querryF = query.FindElements(By.TagName("option"));
+                }
                 if (querryF.ToList()[kf].Text != "Факультет")
                 {
                     faculti = querryF.ToList()[kf].Text;
@@ -58,7 +62,7 @@ namespace ParserForData
                     query = driver.FindElement(By.Name("k"));
                     querryY = query.FindElements(By.TagName("option"));
                     var flist = querryY.ToList().Select(fk => fk.Text).ToList();
-                    
+                    kk = 0;
                     flist.ToList().ForEach( y =>
                     {
                         if (k > 0)
@@ -67,6 +71,8 @@ namespace ParserForData
                             querry = query.FindElements(By.TagName("option"));
                             querry.ToList().Find(p => p.Text == faculti).Click();
                             Thread.Sleep(500);
+                            query = driver.FindElement(By.Name("k"));
+                            querryY = query.FindElements(By.TagName("option"));
                         }
                         if (querryY.ToList()[kk].Text!="Курс")
                         {
@@ -77,6 +83,7 @@ namespace ParserForData
                             query = driver.FindElement(By.Name("g"));
                             querryG = query.FindElements(By.TagName("option"));
                             var glist = querryG.ToList().Select(mn => mn.Text).ToList();
+                            kg = 0;
                             glist.ToList().ForEach( z =>
                             {
                                 if (k > 0)
@@ -93,10 +100,10 @@ namespace ParserForData
                                     querryG = query.FindElements(By.TagName("option"));
                                     
                                 }
-                                if (querryG.ToList()[k].Text!="Группа")
+                                if (querryG.ToList()[kg].Text!="Группа")
                                 {
 
-                                    querryG.ToList()[k].Click();
+                                    querryG.ToList()[kg].Click();
                                     Thread.Sleep(500);
                                     
                                     int count = 0;
@@ -140,17 +147,6 @@ namespace ParserForData
                                                 }
                                                 Console.WriteLine(message);
                                                 Thread.Sleep(500);
-
-
-                                                //string y = x.DownloadString("http://dizilab.com/diziler.xml");
-                                                ////////////////////////////////////////////////////////////////////////////////
-                                                ///
-                                                /// 
-                                                ///Сделать скачивание строки и парсинг ее через регулярные выражения
-                                                ///
-                                                /// 
-                                                ////////////////////////////////////////////////////////////////////////////////
-                                                //string fsch = parser.DownloadString("https://rsue.ru/raspisanie/");
                                             }
 
 
@@ -158,6 +154,7 @@ namespace ParserForData
                                     });
                                     
                                 }
+                                kg++;
                                 k++;
 
                             });
@@ -169,6 +166,7 @@ namespace ParserForData
                 }
                 kf++;
             });
+            driver.Dispose();
 
         }
     }
