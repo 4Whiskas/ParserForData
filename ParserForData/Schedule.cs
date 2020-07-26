@@ -28,7 +28,7 @@ namespace ParserForData
             }
             
         }
-        internal static async  void ParseSchedule()
+        internal static void ParseSchedule()
         {
             driver = new ChromeDriver() { Url = "https://rsue.ru/raspisanie/" };
             Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek>();

@@ -6,6 +6,7 @@ namespace ParserForData
     {
         static void Main(string[] args)
         {
+            Teachers.SendTeachersAsync();
             News.SendNews();
             Schedule.ParseSchedule();
             
