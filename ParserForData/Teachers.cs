@@ -42,6 +42,7 @@ namespace ParserForData
             Kafedra = new string[querryF.Count][];
             Teacher = new string[querryF.Count][][];
             Link = new string[querryF.Count][][];
+            k = 0;
             flist.ToList().ForEach(x =>
             {
                 if (k>0)
@@ -58,6 +59,7 @@ namespace ParserForData
                 Teacher[kf] = new string[querryK.Count][];
                 Link[kf] = new string[querryK.Count][];
                 List<string> klist = querryK.ToList().Select(nk => nk.Text).ToList();
+                k = 0;
                 klist.ToList().ForEach(y =>
                 {
                     if (k>0)
@@ -69,7 +71,8 @@ namespace ParserForData
                         querryK = query.FindElements(By.TagName("a"));
                     }
                     Kafedra[kf][kk] = querryK.ToList()[kk].Text;
-                    querryK.ToList()[kk].Click();//При некоторых группах(у которых в коде элемента есть после ссылки ==$0 )не работает клик, из-за этого все вылетает, а в целом все работает
+                    driver.Url=querryK.ToList()[kk].GetAttribute("href");
+                    //querryK.ToList()[kk].Click();//При некоторых группах(у которых в коде элемента есть после ссылки ==$0 )не работает клик, из-за этого все вылетает, а в целом все работает
                     Thread.Sleep(500);
                     querryT = driver.FindElements(By.CssSelector("div[class=\"col-lg-5 col-md-5 col-sm-5\"]"));
                     Teacher[kf][kk] = new string[querryT.Count];
@@ -88,6 +91,7 @@ namespace ParserForData
                 });
                 kf++;
             });
+            driver.Dispose();
         }
     }
 }
