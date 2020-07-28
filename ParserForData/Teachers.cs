@@ -17,7 +17,7 @@ namespace ParserForData
         private static string[][][] Link;
         private static IWebDriver driver;
         private static IWebElement query;
-        private static IReadOnlyCollection<IWebElement> querry, querryF,querryK,querryT;
+        private static IReadOnlyCollection<IWebElement> querry, querryF, querryK, querryT;
         private static string mes;
         static IWebElement GetElement(By locator)
         {
@@ -34,7 +34,7 @@ namespace ParserForData
         public static void SendTeachersAsync()
         {
             int kf = 0, kk = 0, k = 0, ktl = 0; ;
-            driver = new ChromeDriver() { Url = "https://rsue.ru/fakultety/" };            
+            driver = new ChromeDriver() { Url = "https://rsue.ru/fakultety/" };
             querryF = driver.FindElements(By.CssSelector("div[class=\"col-lg-11 col-md-10 col-sm-10 col-xs-9 col-xs-offset-1 col-sm-offset-0\"]"));
             List<string> flist = querryF.ToList().Select(nm => nm.Text).ToList();
             kf = 0;
@@ -45,7 +45,7 @@ namespace ParserForData
             k = 0;
             flist.ToList().ForEach(x =>
             {
-                if (k>0)
+                if (k > 0)
                 {
                     querryF = driver.FindElements(By.CssSelector("div[class=\"col-lg-11 col-md-10 col-sm-10 col-xs-9 col-xs-offset-1 col-sm-offset-0\"]"));
                 }
@@ -55,14 +55,14 @@ namespace ParserForData
                 kk = 0;
                 query = driver.FindElement(By.CssSelector("div[class=\"panel-collapse collapse in\"]")).FindElement(By.Id("kafedri"));
                 querryK = query.FindElements(By.TagName("a"));
-                Kafedra[kf]= new string[querryK.Count];
+                Kafedra[kf] = new string[querryK.Count];
                 Teacher[kf] = new string[querryK.Count][];
                 Link[kf] = new string[querryK.Count][];
                 List<string> klist = querryK.ToList().Select(nk => nk.Text).ToList();
                 k = 0;
                 klist.ToList().ForEach(y =>
                 {
-                    if (k>0)
+                    if (k > 0)
                     {
                         querryF = driver.FindElements(By.CssSelector("div[class=\"col-lg-11 col-md-10 col-sm-10 col-xs-9 col-xs-offset-1 col-sm-offset-0\"]"));
                         querryF.ToList()[kf].Click();
@@ -70,24 +70,27 @@ namespace ParserForData
                         query = driver.FindElement(By.CssSelector("div[class=\"panel-collapse collapse in\"]")).FindElement(By.Id("kafedri"));
                         querryK = query.FindElements(By.TagName("a"));
                     }
-                    Kafedra[kf][kk] = querryK.ToList()[kk].Text;
-                    driver.Url=querryK.ToList()[kk].GetAttribute("href");
-                    //querryK.ToList()[kk].Click();//При некоторых группах(у которых в коде элемента есть после ссылки ==$0 )не работает клик, из-за этого все вылетает, а в целом все работает
-                    Thread.Sleep(500);
-                    querryT = driver.FindElements(By.CssSelector("div[class=\"col-lg-5 col-md-5 col-sm-5\"]"));
-                    Teacher[kf][kk] = new string[querryT.Count];
-                    Link[kf][kk] = new string[querryT.Count];
-                    ktl = 0;
-                    querryT.ToList().ForEach(z =>
-                    {
-                        Teacher[kf][kk][ktl] = z.Text;
-                        Link[kf][kk][ktl]= driver.FindElement(By.LinkText(z.Text)).GetAttribute("href");
-                        ktl++;
-                    });
-                    kk++;
-                    k++;
-                    driver.Url = "https://rsue.ru/fakultety/";
-                    Thread.Sleep(500);
+                    //if (querryK.ToList()[kf].GetAttribute("href") != "https://vk.com/public146692864" && querryK.ToList()[kf].GetAttribute("href") != "https://www.instagram.com/rsue_economics_and_finance/" && querryK.ToList()[kf].GetAttribute("href") != "https://vk.com/finlearn" && querryK.ToList()[kf].GetAttribute("href") != "https://vk.com/public131015726" && querryK.ToList()[kf].GetAttribute("href") != "https://vk.com/bank_delo_rsue" && querryK.ToList()[kf].GetAttribute("href") != "https://www.facebook.com/groups/bank.delo.rsue" && querryK.ToList()[kf].GetAttribute("href") != "https://vk.com/club110200971" && querryK.ToList()[kf].GetAttribute("href") != "https://vk.com/club142650850" && querryK.ToList()[kf].GetAttribute("href") != "https://vk.com/club141978015" && querryK.ToList()[kf].GetAttribute("href") != "https://vk.com/nalogi.rinh" && querryK.ToList()[kf].GetAttribute("href") != "https://vk.com/postupaem_eif")
+                    //{
+                        Kafedra[kf][kk] = querryK.ToList()[kk].Text;
+                        driver.Url = querryK.ToList()[kk].GetAttribute("href");
+                        //querryK.ToList()[kk].Click();//При некоторых группах(у которых в коде элемента есть после ссылки ==$0 )не работает клик, из-за этого все вылетает, а в целом все работает
+                        Thread.Sleep(500);
+                        querryT = driver.FindElements(By.CssSelector("div[class=\"col-lg-5 col-md-5 col-sm-5\"]"));
+                        Teacher[kf][kk] = new string[querryT.Count];
+                        Link[kf][kk] = new string[querryT.Count];
+                        ktl = 0;
+                        querryT.ToList().ForEach(z =>
+                        {
+                            Teacher[kf][kk][ktl] = z.Text;
+                            Link[kf][kk][ktl] = driver.FindElement(By.LinkText(z.Text)).GetAttribute("href");
+                            ktl++;
+                        });
+                        kk++;
+                        k++;
+                        driver.Url = "https://rsue.ru/fakultety/";
+                        Thread.Sleep(500);
+                    //}
                 });
                 kf++;
             });
