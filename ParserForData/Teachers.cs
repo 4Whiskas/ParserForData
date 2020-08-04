@@ -16,7 +16,7 @@ namespace ParserForData
         private static string[][][] Teacher;
         private static string[][][] Link;
         private static IWebDriver driver;
-        private static IWebElement query;
+        private static IWebElement query,qurf;
         private static IReadOnlyCollection<IWebElement> querry, querryF, querryK, querryT;
         private static string mes;
         static IWebElement GetElement(By locator)
@@ -49,11 +49,24 @@ namespace ParserForData
                 //{
                 //    querryF = driver.FindElements(By.CssSelector("div[class=\"col-lg-11 col-md-10 col-sm-10 col-xs-9 col-xs-offset-1 col-sm-offset-0\"]"));
                 //}
-                querryF = driver.FindElements(By.CssSelector("div[class=\"col-lg-11 col-md-10 col-sm-10 col-xs-9 col-xs-offset-1 col-sm-offset-0\"]"));
-                faculti[kf] = querryF.ToList()[kf].Text;
-                Thread.Sleep(1500);
-                querryF.ToList()[kf].Click();
-                Thread.Sleep(1500);
+                if (kf==5)
+                {
+                    qurf = driver.FindElement(By.Id("accordion6"));
+                    faculti[kf] = qurf.Text;
+                    Thread.Sleep(1500);
+                    qurf.Click();
+                    Thread.Sleep(1500);
+                }
+                else
+                {
+                    querryF = driver.FindElements(By.CssSelector("div[class=\"col-lg-11 col-md-10 col-sm-10 col-xs-9 col-xs-offset-1 col-sm-offset-0\"]"));
+                    faculti[kf] = querryF.ToList()[kf].Text;
+                    Thread.Sleep(1500);
+                    querryF.ToList()[kf].Click();
+                    Thread.Sleep(1500);
+                }
+               
+                
                 kk = 0;
                 query = driver.FindElement(By.CssSelector("div[class=\"panel-collapse collapse in\"]")).FindElement(By.Id("kafedri"));
                 querryK = query.FindElements(By.TagName("a"));
@@ -74,9 +87,22 @@ namespace ParserForData
 
                         if (k > 0)
                         {
-                            querryF = driver.FindElements(By.CssSelector("div[class=\"col-lg-11 col-md-10 col-sm-10 col-xs-9 col-xs-offset-1 col-sm-offset-0\"]"));
-                            querryF.ToList()[kf].Click();
-                            Thread.Sleep(1500);
+                            if (kf == 5)
+                            {
+                                qurf = driver.FindElement(By.Id("accordion6"));
+                                faculti[kf] = qurf.Text;
+                                Thread.Sleep(1500);
+                                qurf.Click();
+                                Thread.Sleep(1500);
+                            }
+                            else
+                            {
+                                querryF = driver.FindElements(By.CssSelector("div[class=\"col-lg-11 col-md-10 col-sm-10 col-xs-9 col-xs-offset-1 col-sm-offset-0\"]"));
+                                faculti[kf] = querryF.ToList()[kf].Text;
+                                Thread.Sleep(1500);
+                                querryF.ToList()[kf].Click();
+                                Thread.Sleep(1500);
+                            }
                             query = driver.FindElement(By.CssSelector("div[class=\"panel-collapse collapse in\"]")).FindElement(By.Id("kafedri"));
                             querryK = query.FindElements(By.TagName("a"));
                         }
